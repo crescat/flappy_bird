@@ -40,28 +40,26 @@ class Bird(pygame.sprite.Sprite):
     image = pygame.image.load('bird.png')
 
     def __init__(self, startpos=(WIDTH//5, HEIGHT//2)):
-       pygame.sprite.Sprite.__init__(self, self.groups)
-       self.image = Bird.image
-       self.rect = self.image.get_rect()
-       self.dx = startpos[0]
-       self.height = startpos[1] - self.rect[1]
-       self.radius = self.rect[0] // 2 - 3
-       self.time_start_falling = time.monotonic()
-       self.initial_velocity = 0
-       self.initial_height = self.height
-       self.collided = False
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.image = Bird.image
+        self.rect = self.image.get_rect()
+        self.dx = startpos[0]
+        self.height = startpos[1] - self.rect[1]
+        self.radius = self.rect[0] // 2 - 3
+        self.time_start_falling = time.monotonic()
+        self.velocity = 0
+        self.collided = False
 
 
     def update_position(self):
         falling_time = time.monotonic() - self.time_start_falling
-        self.height = self.initial_velocity * falling_time \
-                    + self.initial_height \
-                    - 0.5 * GRAVITY * falling_time * falling_time
+        self.time_start_falling = time.monotonic()
+        self.velocity -= GRAVITY * falling_time
+        self.height += self.velocity * falling_time
 
 
     def jump(self):
-        self.initial_velocity = -250
-        self.initial_height = self.height
+        self.velocity = -250
         self.time_start_falling = time.monotonic()
 
 
@@ -72,9 +70,9 @@ class Bird(pygame.sprite.Sprite):
             self.rect.center = (self.dx, self.height)
 
 
-class Wall(pygame.sprite.Sprite):
+class Pillar(pygame.sprite.Sprite):
     def __init__(self):
-       pygame.sprite.Sprite.__init__(self, self.groups)
+        pygame.sprite.Sprite.__init__(self, self.groups)
 
 
 class PygView:
@@ -87,7 +85,7 @@ class PygView:
         self.background_clock = Clock(FPS)
         self.render_clock = Clock(FPS)
         self.gravity_clock = Clock(FPS)
-        self.wall_clock = Clock(FPS)
+        self.pillar_clock = Clock(FPS)
         self.clock = pygame.time.Clock()
 
 
@@ -128,7 +126,9 @@ class PygView:
         self.screen.blit(self.background, (0, 0))
         mainloop = True
         allgroups = pygame.sprite.Group()
+        pillargroups = pygame.sprite.Group()
         Bird.groups = allgroups
+        Pillar.groups = pillargroups, allgroups
         Bird.area = self.screen.get_rect()
         bird = Bird()
         self.start_game()
@@ -152,6 +152,10 @@ class PygView:
 
                 if self.gravity_clock.should_update():
                     bird.update_position()
+
+                if self.pillar_clock.should_update():
+                    pass
+
 
             if self.render_clock.should_update():
                 self.clock.tick()
