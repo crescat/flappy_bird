@@ -105,6 +105,7 @@ class PygView:
         self.bird_clock = Clock(FPS)
         self.pillar_clock = Clock(.5)
         self.font = pygame.font.SysFont(FONT, 100)
+        self.smallfont = pygame.font.SysFont(FONT, 30)
         self.clock = pygame.time.Clock()
 
 
@@ -255,8 +256,11 @@ class PygView:
                     all_groups.draw(self.screen)
                 elif self.state == 'game over':
                     text = self.font.render('GAME OVER', False, (255, 255, 255))
+                    small = self.smallfont.render('Press space to restart', False, (255, 255, 255))
                     text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
+                    small_rect = small.get_rect(center=(WIDTH/2, HEIGHT/2+50))
                     self.screen.blit(text, text_rect)
+                    self.screen.blit(small, small_rect)
 
                 text = 'FPS: {0:.2f}, Score: {1}'.format(self.clock.get_fps(), int(self.score))
                 pygame.display.set_caption(text)
