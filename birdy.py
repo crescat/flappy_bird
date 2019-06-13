@@ -8,6 +8,7 @@ FPS = 60
 GRAVITY = -400
 PILLAR_WIDTH = 60
 PILLAR_SPEED = 2
+FONT = 'Uroob, Bold'
 
 
 bg = pygame.image.load('background.png')
@@ -96,7 +97,6 @@ class Pillar(pygame.sprite.Sprite):
 class PygView:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Press ESC to quit")
         pygame.font.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.background = pygame.Surface(self.screen.get_size()).convert()
@@ -104,7 +104,7 @@ class PygView:
         self.render_clock = Clock(FPS)
         self.bird_clock = Clock(FPS)
         self.pillar_clock = Clock(.5)
-        self.font = pygame.font.SysFont('Ubuntu Mono', 50)
+        self.font = pygame.font.SysFont(FONT, 100)
         self.clock = pygame.time.Clock()
 
 
@@ -254,7 +254,7 @@ class PygView:
                     all_groups.update()
                     all_groups.draw(self.screen)
                 elif self.state == 'game over':
-                    text = self.font.render('GAME OVER', False, (0, 0, 0))
+                    text = self.font.render('GAME OVER', False, (255, 255, 255))
                     text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
                     self.screen.blit(text, text_rect)
 
